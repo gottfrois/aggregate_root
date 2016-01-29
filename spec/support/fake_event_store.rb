@@ -7,7 +7,7 @@ class FakeEventStore
   attr_reader :repository
 
   def publish_event(event_data, stream_name = GLOBAL_STREAM, expected_version = nil)
-    raise NotSupported if expected_version
+    raise RubyEventStore::WrongExpectedEventVersion if version_incorrect?(stream_name, expected_version)
     repository[stream_name] = [] unless repository.key?(stream_name)
     repository[stream_name] << event_data
     event_data
@@ -36,5 +36,17 @@ class FakeEventStore
 
   def subscribe_to_all_events(subscriber)
     raise NotSupported
+  end
+
+  private
+
+  def version_incorrect?(stream_name, expected_version)
+    unless expected_version.nil?
+      find_last_event_version(stream_name) != expected_version
+    end
+  end
+
+  def find_last_event_version(stream_name)
+    read_all_events(stream_name).last.event_id
   end
 end
