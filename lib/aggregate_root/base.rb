@@ -11,12 +11,14 @@ module AggregateRoot
 
     def apply_old_event(event)
       apply_event(event)
+      @version = event.event_id
     end
 
     def unpublished_events
       @unpublished_events ||= []
     end
 
+    attr_reader :version
     private
     attr_writer :id
 
