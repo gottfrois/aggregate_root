@@ -1,6 +1,8 @@
 require 'active_support/inflector'
 
 module AggregateRoot
+  HasBeenChanged = Class.new(StandardError)
+
   module Base
     attr_reader :id
 

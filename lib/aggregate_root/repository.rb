@@ -10,6 +10,8 @@ module AggregateRoot
         event_store.publish_event(event, aggregate.id, expected_version)
         expected_version = event.event_id
       end
+    rescue RubyEventStore::WrongExpectedEventVersion
+      raise AggregateRoot::HasBeenChanged
     end
 
     def load(aggregate)
