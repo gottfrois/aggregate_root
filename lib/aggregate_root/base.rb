@@ -2,7 +2,7 @@ require 'active_support/inflector'
 
 module AggregateRoot
   module Base
-    attr_reader :id
+    attr_reader :id, :version
 
     def apply(event)
       apply_event(event)
@@ -11,6 +11,7 @@ module AggregateRoot
 
     def apply_old_event(event)
       apply_event(event)
+      @version = event.event_id
     end
 
     def unpublished_events
